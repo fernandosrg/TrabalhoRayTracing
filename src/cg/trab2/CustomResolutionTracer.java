@@ -9,8 +9,8 @@ import org.jtrace.primitives.ColorRGB;
 
 public class CustomResolutionTracer extends Tracer {
 
-	private int hres;
-	private int vres;
+	protected int hres;
+	protected int vres;
 
 	public CustomResolutionTracer(int hres, int vres) {
 		super();
@@ -19,11 +19,18 @@ public class CustomResolutionTracer extends Tracer {
 
 	@Override
 	public void render(Scene scene, ViewPlane viewPlane) {
+		fireStart(viewPlane);
+
+		doRendering(scene, viewPlane);
+
+		fireFinish();
+	}
+
+	protected void doRendering(Scene scene, ViewPlane viewPlane) {
 		final int planeHres = viewPlane.getHres();
 		final int planeVres = viewPlane.getVres();
 		final Camera camera = scene.getCamera();
 
-		fireStart(viewPlane);
 		initInterceptors(scene);
 
 		double hResolutionRatio = planeHres / hres;
@@ -43,8 +50,6 @@ public class CustomResolutionTracer extends Tracer {
 						fireAfterTrace(color, x, y);
 			}
 		}
-
-		fireFinish();
 	}
 
 	public void setResolution(int hres, int vres) {
