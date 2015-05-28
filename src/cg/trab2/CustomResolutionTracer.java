@@ -38,18 +38,25 @@ public class CustomResolutionTracer extends Tracer {
 
 		for (int r = 0; r < vres; r++) {
 			for (int c = 0; c < hres; c++) {
-				int realR = (int) (r*vResolutionRatio);
-				int realC = (int) (c*hResolutionRatio);
-
-				final Jay jay = camera.createJay(realR, realC, planeVres, planeHres);
-
-				final ColorRGB color = trace(scene, jay);
-				
-				for (int x = realC; x < realC + hResolutionRatio ; x++)
-					for (int y = realR; y < realR + vResolutionRatio ; y++)
-						fireAfterTrace(color, x, y);
+				traceRay(scene, planeHres, planeVres, camera, hResolutionRatio,
+						vResolutionRatio, r, c);
 			}
 		}
+	}
+
+	protected void traceRay(Scene scene, final int planeHres,
+			final int planeVres, final Camera camera, double hResolutionRatio,
+			double vResolutionRatio, int r, int c) {
+		int realR = (int) (r*vResolutionRatio);
+		int realC = (int) (c*hResolutionRatio);
+
+		final Jay jay = camera.createJay(realR, realC, planeVres, planeHres);
+
+		final ColorRGB color = trace(scene, jay);
+		
+		for (int x = realC; x < realC + hResolutionRatio ; x++)
+			for (int y = realR; y < realR + vResolutionRatio ; y++)
+				fireAfterTrace(color, x, y);
 	}
 
 	public void setResolution(int hres, int vres) {
