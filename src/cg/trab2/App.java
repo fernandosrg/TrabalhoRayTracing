@@ -34,15 +34,15 @@ public class App {
 
         final ReflectanceCoefficient kAmbient = new ReflectanceCoefficient(0.07, 0.07, 0.07);
         final ReflectanceCoefficient kDiffuse = new ReflectanceCoefficient(0.3, 0.3, 0.3);
-
-        final Material redMaterial = new Material(ColorRGB.RED, kAmbient, kDiffuse);
-        final Material blueMaterial = new Material(ColorRGB.BLUE, kAmbient, kDiffuse);
-        final Material planeMaterial = new Material(ColorRGB.YELLOW, kAmbient, kDiffuse);
         
-        double reflactenceCoefficient = 0.1;
-        double reflactenceCoefficient2 = 0.05;
-        redMaterial.setkSpecular(new ReflectanceCoefficient(reflactenceCoefficient, reflactenceCoefficient, reflactenceCoefficient));
-        blueMaterial.setkSpecular(new ReflectanceCoefficient(reflactenceCoefficient2, reflactenceCoefficient2, reflactenceCoefficient2));
+        double kR1 = 0.1;
+        double kR2 = 0.05;
+        ReflectanceCoefficient kReflectance1 = new ReflectanceCoefficient(kR1, kR1, kR1);
+        ReflectanceCoefficient kReflectance2 = new ReflectanceCoefficient(kR2, kR2, kR2);
+        
+        final Material redMaterial = new Material(ColorRGB.RED, kAmbient, kDiffuse, kReflectance1);
+        final Material blueMaterial = new Material(ColorRGB.BLUE, kAmbient, kDiffuse, kReflectance2);
+        final Material planeMaterial = new Material(ColorRGB.YELLOW, kAmbient, kDiffuse);
         
         final Sphere red = new Sphere(centerRed, 10, redMaterial);
         final Sphere blue = new Sphere(centerBlue, 10, blueMaterial);

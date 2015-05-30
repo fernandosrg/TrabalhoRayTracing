@@ -42,6 +42,7 @@ private static final double SPECULAR_FACTOR = 0.2;
   private JPanel createTracerPanel() {
 	ProgressiveResolutionTracer tracer = new ProgressiveResolutionTracer(2, 512);
 	tracer.setOptimizeRaysTraced(true);
+	tracer.setMillisBetweenImages(200);
 	
 	tracer.addShaders(Shaders.ambientShader(), Shaders.diffuseShader(), Shaders.specularShader(SPECULAR_FACTOR));
 	  

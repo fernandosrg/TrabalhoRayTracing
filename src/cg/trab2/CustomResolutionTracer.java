@@ -38,25 +38,33 @@ public class CustomResolutionTracer extends Tracer {
 
 		for (int r = 0; r < vres; r++) {
 			for (int c = 0; c < hres; c++) {
-				traceRay(scene, planeHres, planeVres, camera, hResolutionRatio,
-						vResolutionRatio, r, c);
+				int realR = (int) (r * vResolutionRatio);
+				int realC = (int) (c * hResolutionRatio);
+
+				ColorRGB color = traceRay(scene, planeHres, planeVres, camera,
+						realR, realC);
+
+				paint(hResolutionRatio, vResolutionRatio, realR, realC, color);
 			}
 		}
 	}
 
-	protected void traceRay(Scene scene, final int planeHres,
-			final int planeVres, final Camera camera, double hResolutionRatio,
-			double vResolutionRatio, int r, int c) {
-		int realR = (int) (r*vResolutionRatio);
-		int realC = (int) (c*hResolutionRatio);
+	protected void paint(double hResolutionRatio, double vResolutionRatio,
+			int realR, int realC, ColorRGB color) {
+		
+		for (int x = realC; x < realC + hResolutionRatio; x++)
+			for (int y = realR; y < realR + vResolutionRatio; y++)
+				fireAfterTrace(color, x, y);
+	}
+
+	protected ColorRGB traceRay(Scene scene, final int planeHres,
+			final int planeVres, final Camera camera, int realR, int realC) {
 
 		final Jay jay = camera.createJay(realR, realC, planeVres, planeHres);
 
 		final ColorRGB color = trace(scene, jay);
-		
-		for (int x = realC; x < realC + hResolutionRatio ; x++)
-			for (int y = realR; y < realR + vResolutionRatio ; y++)
-				fireAfterTrace(color, x, y);
+
+		return color;
 	}
 
 	public void setResolution(int hres, int vres) {
