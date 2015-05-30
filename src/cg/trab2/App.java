@@ -26,8 +26,8 @@ public class App {
         final Point3D eye = new Point3D(-15, -15, 100);
         final Vector3D up = new Vector3D(0, 1, 0);
 
-        final Point3D centerRed  = new Point3D(0, 0, -10);
-        final Point3D centerBlue = new Point3D(-10, 0, -20);
+        final Point3D centerRed  = new Point3D(0, 0, -20);
+        final Point3D centerBlue = new Point3D(-20, 0, -40);
 
         final Point3D planePoint = new Point3D(0, 20, 0);
         final Vector3D planeNormal = new Vector3D(0, -1, 0);
@@ -44,13 +44,13 @@ public class App {
         final Material blueMaterial = new Material(ColorRGB.BLUE, kAmbient, kDiffuse, kReflectance2);
         final Material planeMaterial = new Material(ColorRGB.YELLOW, kAmbient, kDiffuse);
         
-        final Sphere red = new Sphere(centerRed, 10, redMaterial);
-        final Sphere blue = new Sphere(centerBlue, 10, blueMaterial);
+        final Sphere red = new Sphere(centerRed, 20, redMaterial);
+        final Sphere blue = new Sphere(centerBlue, 20, blueMaterial);
 
         final Plane plane1 = new Plane(planePoint, planeNormal, planeMaterial);
         final Plane plane2 = new Plane(planePoint.multiply(-1), planeNormal.multiply(-1), planeMaterial);
 
-        final Light light = new PointLight(0, -20, 10);
+        final Light light = new PointLight(0, -40, 20);
 
         final Camera pinHoleCamera = new PinHoleCamera(eye, lookAt, up);
         pinHoleCamera.setZoomFactor(10);

@@ -6,7 +6,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import org.jtrace.Scene;
-import org.jtrace.Tracer;
 import org.jtrace.ViewPlane;
 import org.jtrace.shader.Shaders;
 import org.jtrace.swing.TracerPanel;
@@ -42,6 +41,7 @@ private static final double SPECULAR_FACTOR = 0.2;
   private JPanel createTracerPanel() {
 	ProgressiveResolutionTracer tracer = new ProgressiveResolutionTracer(2, 512);
 	tracer.setOptimizeRaysTraced(true);
+	tracer.setAntiAliasing(true);
 	tracer.setMillisBetweenImages(200);
 	
 	tracer.addShaders(Shaders.ambientShader(), Shaders.diffuseShader(), Shaders.specularShader(SPECULAR_FACTOR));

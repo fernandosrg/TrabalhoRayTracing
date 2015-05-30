@@ -51,16 +51,17 @@ public class CustomResolutionTracer extends Tracer {
 
 	protected void paint(double hResolutionRatio, double vResolutionRatio,
 			int realR, int realC, ColorRGB color) {
-		
+
 		for (int x = realC; x < realC + hResolutionRatio; x++)
 			for (int y = realR; y < realR + vResolutionRatio; y++)
 				fireAfterTrace(color, x, y);
 	}
 
-	protected ColorRGB traceRay(Scene scene, final int planeHres,
-			final int planeVres, final Camera camera, int realR, int realC) {
+	protected ColorRGB traceRay(Scene scene, int planeHres, int planeVres,
+			Camera camera, double realR, double realC) {
 
-		final Jay jay = camera.createJay(realR, realC, planeVres, planeHres);
+		final Jay jay = camera.createJay((int) (realR * 2), (int) (realC * 2),
+				planeVres * 2, planeHres * 2);
 
 		final ColorRGB color = trace(scene, jay);
 
