@@ -6,6 +6,7 @@ import org.jtrace.cameras.Camera;
 import org.jtrace.cameras.PinHoleCamera;
 import org.jtrace.geometry.Plane;
 import org.jtrace.geometry.Sphere;
+import org.jtrace.interceptor.ShadowInterceptor;
 import org.jtrace.lights.Light;
 import org.jtrace.lights.PointLight;
 import org.jtrace.primitives.ColorRGB;
@@ -40,7 +41,7 @@ public class TrabRayTracing {
         Point3D centerBlue = new Point3D(-20, 0, -40);
 
         ReflectanceCoefficient kAmbient = new ReflectanceCoefficient(0.07, 0.07, 0.07);
-        ReflectanceCoefficient kDiffuse = new ReflectanceCoefficient(0.3, 0.3, 0.3);
+        ReflectanceCoefficient kDiffuse = new ReflectanceCoefficient(0.5, 0.5, 0.5);
         
         double kR1 = 0.1;
         double kR2 = 0.05;
@@ -56,7 +57,7 @@ public class TrabRayTracing {
 
         Plane plane = new Plane(new Point3D(0, -30, 0), new Vector3D(0, 1, 0), planeMaterial);
 
-        Light light = new PointLight(0, -40, 20);
+        Light light = new PointLight(-50, 40, 120);
 
         Camera pinHoleCamera = new PinHoleCamera(eye, lookAt, up);
         pinHoleCamera.setZoomFactor(10);
@@ -69,6 +70,8 @@ public class TrabRayTracing {
 		tracer.setOptimizeRaysTraced(false);
 		tracer.setAntiAliasing(false);
 		tracer.setMillisBetweenImages(200);
+		
+		tracer.addInterceptors(new ShadowInterceptor());
 
 		tracer.addShaders(Shaders.ambientShader(), Shaders.diffuseShader(),
 				Shaders.specularShader(SPECULAR_FACTOR));
