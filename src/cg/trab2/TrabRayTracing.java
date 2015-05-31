@@ -18,46 +18,49 @@ public class TrabRayTracing {
 	
 	private static final double SPECULAR_FACTOR = 0.2;
 
-    private static MainWindow window = new MainWindow(createScene(), createTracer());
+    private static MainWindow window;
+    
+    private static Sphere obj1;
+    private static Sphere obj2;
 
     public static void main(final String[] args) {
+    	Scene scene = createScene();
+    	ProgressiveResolutionTracer tracer = createTracer();
+    	
+    	window = new MainWindow(scene, tracer, obj1, obj2);
         window.setVisible(true);
     }
 
     public static Scene createScene() {
-        final Point3D lookAt = new Point3D(0, 0, 0);
-        final Point3D eye = new Point3D(-15, -15, 100);
-        final Vector3D up = new Vector3D(0, 1, 0);
+        Point3D lookAt = new Point3D(0, 0, 0);
+        Point3D eye = new Point3D(0, 50, 100);
+        Vector3D up = new Vector3D(0, 1, 0);
 
-        final Point3D centerRed  = new Point3D(0, 0, -20);
-        final Point3D centerBlue = new Point3D(-20, 0, -40);
+        Point3D centerRed  = new Point3D(0, 0, -20);
+        Point3D centerBlue = new Point3D(-20, 0, -40);
 
-        final Point3D planePoint = new Point3D(0, 20, 0);
-        final Vector3D planeNormal = new Vector3D(0, -1, 0);
-
-        final ReflectanceCoefficient kAmbient = new ReflectanceCoefficient(0.07, 0.07, 0.07);
-        final ReflectanceCoefficient kDiffuse = new ReflectanceCoefficient(0.3, 0.3, 0.3);
+        ReflectanceCoefficient kAmbient = new ReflectanceCoefficient(0.07, 0.07, 0.07);
+        ReflectanceCoefficient kDiffuse = new ReflectanceCoefficient(0.3, 0.3, 0.3);
         
         double kR1 = 0.1;
         double kR2 = 0.05;
         ReflectanceCoefficient kReflectance1 = new ReflectanceCoefficient(kR1, kR1, kR1);
         ReflectanceCoefficient kReflectance2 = new ReflectanceCoefficient(kR2, kR2, kR2);
         
-        final Material redMaterial = new Material(ColorRGB.RED, kAmbient, kDiffuse, kReflectance1);
-        final Material blueMaterial = new Material(ColorRGB.BLUE, kAmbient, kDiffuse, kReflectance2);
-        final Material planeMaterial = new Material(ColorRGB.YELLOW, kAmbient, kDiffuse);
+        Material redMaterial = new Material(ColorRGB.RED, kAmbient, kDiffuse, kReflectance1);
+        Material blueMaterial = new Material(ColorRGB.BLUE, kAmbient, kDiffuse, kReflectance2);
+        Material planeMaterial = new Material(ColorRGB.GREEN, kAmbient, kDiffuse);
         
-        final Sphere red = new Sphere(centerRed, 20, redMaterial);
-        final Sphere blue = new Sphere(centerBlue, 20, blueMaterial);
+        obj1 = new Sphere(centerRed, 20, redMaterial);
+        obj2 = new Sphere(centerBlue, 20, blueMaterial);
 
-        final Plane plane1 = new Plane(planePoint, planeNormal, planeMaterial);
-        final Plane plane2 = new Plane(planePoint.multiply(-1), planeNormal.multiply(-1), planeMaterial);
+        Plane plane = new Plane(new Point3D(0, -30, 0), new Vector3D(0, 1, 0), planeMaterial);
 
-        final Light light = new PointLight(0, -40, 20);
+        Light light = new PointLight(0, -40, 20);
 
-        final Camera pinHoleCamera = new PinHoleCamera(eye, lookAt, up);
+        Camera pinHoleCamera = new PinHoleCamera(eye, lookAt, up);
         pinHoleCamera.setZoomFactor(10);
-        return new Scene().add(blue, red, plane1, plane2).add(light).setCamera(pinHoleCamera);
+        return new Scene().add(obj2, obj1, plane).add(light).setCamera(pinHoleCamera);
     }
     
     public static ProgressiveResolutionTracer createTracer() {

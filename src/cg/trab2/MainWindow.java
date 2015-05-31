@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 
 import org.jtrace.Scene;
 import org.jtrace.ViewPlane;
+import org.jtrace.geometry.Sphere;
 import org.jtrace.swing.TracerPanel;
 
 public class MainWindow extends JFrame {
@@ -30,19 +31,25 @@ public class MainWindow extends JFrame {
 
 	private Scene scene;
 	private ProgressiveResolutionTracer tracer;
-	
+
+	private Sphere obj1;
+	private Sphere obj2;
+
 	private TracerPanel tracerPanel;
 	private Checkbox chkAntiAliasing;
 	private Checkbox chkOptimize;
 	private TextField txtMillisBetweenImages;
-	
-	public MainWindow(Scene scene, ProgressiveResolutionTracer tracer) {
-		setSize(550, 650);
+
+	public MainWindow(Scene scene, ProgressiveResolutionTracer tracer,
+					  Sphere obj1, Sphere obj2) {
+		setSize(550, 720);
 		setTitle("Trabalho Ray Tracing");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		this.scene = scene;
 		this.tracer = tracer;
+		this.obj1 = obj1;
+		this.obj2 = obj2;
 
 		init();
 	}
@@ -52,24 +59,31 @@ public class MainWindow extends JFrame {
 
 		tracerPanel = createTracerPanel();
 		mainPanel.add(tracerPanel);
-		
+
 		chkAntiAliasing = new Checkbox(LABEL_ANTI_ALIASING);
 		chkAntiAliasing.setState(tracer.isAntiAliasing());
 		chkAntiAliasing.addItemListener(new AntiAliasingEventListener());
 		mainPanel.add(chkAntiAliasing);
-		
+
 		chkOptimize = new Checkbox(LABEL_OPTIMIZE);
 		chkOptimize.setState(tracer.isOptimizeRaysTraced());
 		chkOptimize.addItemListener(new OptimizeEventListener());
 		mainPanel.add(chkOptimize);
-		
+
 		Label lblMillisBetweenImages = new Label(LABEL_MILLIS);
 		mainPanel.add(lblMillisBetweenImages);
-		
+
 		txtMillisBetweenImages = new TextField(6);
-		txtMillisBetweenImages.setText(Integer.toString(tracer.getMillisBetweenImages()));
+		txtMillisBetweenImages.setText(Integer.toString(tracer
+				.getMillisBetweenImages()));
 		txtMillisBetweenImages.addFocusListener(new MillisEventListener());
 		mainPanel.add(txtMillisBetweenImages);
+		
+		ObjectEditor editor1 = new ObjectEditor(obj1, "obj1");
+		mainPanel.add(editor1);
+		
+		ObjectEditor editor2 = new ObjectEditor(obj2, "obj2");
+		mainPanel.add(editor2);
 
 		add(mainPanel);
 	}
@@ -79,7 +93,7 @@ public class MainWindow extends JFrame {
 				VIEWPLANE_DIMENSION, VIEWPLANE_DIMENSION), VIEWPLANE_DIMENSION,
 				VIEWPLANE_DIMENSION);
 	}
-	
+
 	private class AntiAliasingEventListener implements ItemListener {
 		@Override
 		public void itemStateChanged(ItemEvent e) {
@@ -94,29 +108,30 @@ public class MainWindow extends JFrame {
 			}
 		}
 	}
-	
+
 	private class OptimizeEventListener implements ItemListener {
 		@Override
 		public void itemStateChanged(ItemEvent e) {
 			tracer.setOptimizeRaysTraced(chkOptimize.getState());
 		}
 	}
-	
+
 	private class MillisEventListener implements FocusListener {
 		@Override
-		public void focusGained(FocusEvent arg0) { }
+		public void focusGained(FocusEvent arg0) {
+		}
 
 		@Override
 		public void focusLost(FocusEvent arg0) {
 			int millis;
-			
+
 			try {
 				millis = Integer.parseInt(txtMillisBetweenImages.getText());
 			} catch (NumberFormatException e) {
 				millis = 0;
 				txtMillisBetweenImages.setText(Integer.toString(millis));
 			}
-			
+
 			tracer.setMillisBetweenImages(millis);
 		}
 	}
