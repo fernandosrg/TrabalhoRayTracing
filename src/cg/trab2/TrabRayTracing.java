@@ -12,10 +12,13 @@ import org.jtrace.primitives.ColorRGB;
 import org.jtrace.primitives.Point3D;
 import org.jtrace.primitives.ReflectanceCoefficient;
 import org.jtrace.primitives.Vector3D;
+import org.jtrace.shader.Shaders;
 
-public class App {
+public class TrabRayTracing {
+	
+	private static final double SPECULAR_FACTOR = 0.2;
 
-    private static MainWindow window = new MainWindow(createScene());
+    private static MainWindow window = new MainWindow(createScene(), createTracer());
 
     public static void main(final String[] args) {
         window.setVisible(true);
@@ -55,6 +58,19 @@ public class App {
         final Camera pinHoleCamera = new PinHoleCamera(eye, lookAt, up);
         pinHoleCamera.setZoomFactor(10);
         return new Scene().add(blue, red, plane1, plane2).add(light).setCamera(pinHoleCamera);
+    }
+    
+    public static ProgressiveResolutionTracer createTracer() {
+    	ProgressiveResolutionTracer tracer = new ProgressiveResolutionTracer(2,
+				512);
+		tracer.setOptimizeRaysTraced(false);
+		tracer.setAntiAliasing(false);
+		tracer.setMillisBetweenImages(200);
+
+		tracer.addShaders(Shaders.ambientShader(), Shaders.diffuseShader(),
+				Shaders.specularShader(SPECULAR_FACTOR));
+		
+		return tracer;
     }
 
 }
